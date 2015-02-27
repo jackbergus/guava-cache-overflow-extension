@@ -63,8 +63,10 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
 	public Set<K> getPersistedKeys() {
     	Set<K> toret = new TreeSet<K>();
     	for (File x : persistenceRootDirectory.listFiles()) {
-    		K key = (K)x.getName();
-    		toret.add(key);
+    		if (x.isFile()) {
+	    		K key = (K)x.getName();
+	    		toret.add(key);
+    		}
     	}
     	return toret;
     }

@@ -246,8 +246,7 @@ public abstract class AbstractPersistingCache<K, V> implements Cache<K, V> {
     /**
      * With this implementation, the cleanUp call stores all the elements in the HDD
      */
-    @Override
-    public void cleanUp() {
+    public void persist() {
     	Map<K,V> m = underlyingCache.asMap();
     	for (K x : m.keySet()) {
     		try {
@@ -256,6 +255,12 @@ public abstract class AbstractPersistingCache<K, V> implements Cache<K, V> {
 				e.printStackTrace();
 			}
     	}
-        underlyingCache.cleanUp();
+        //Do not remove the elements in ram underlyingCache.cleanUp();
     }
+    
+    public void cleanUp() {
+    	underlyingCache.cleanUp();
+    }
+    
+    
 }

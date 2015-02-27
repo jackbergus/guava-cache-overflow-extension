@@ -125,4 +125,20 @@ public class CacheMap<K,V> implements Map<K,V> {
         throw new RuntimeException("entrySet should have never been used");
     }
     
+    /**
+     * Performs the persistency in the local file system
+     */
+    public void persist() {
+    	c.persist();
+    }
+    
+    /**
+     * Persists the in-ram memory and clean the RAM
+     */
+    public void cleanUp() {
+    	c.persist();
+    	c.cleanUp();
+    	
+    }
+    
 }

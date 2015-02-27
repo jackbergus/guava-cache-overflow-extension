@@ -64,8 +64,13 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     	Set<K> toret = new TreeSet<K>();
     	for (File x : persistenceRootDirectory.listFiles()) {
     		if (x.isFile()) {
-	    		K key = (K)x.getName();
-	    		toret.add(key);
+    			//Shitty Mac
+				if (x.getName().contains("Icon")&&x.getName().endsWith("\r"))
+					continue;
+				System.out.println(x.getName());
+				K key = (K)x.getName();
+				toret.add(key);
+	    		
     		}
     	}
     	return toret;

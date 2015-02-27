@@ -3,6 +3,7 @@ package com.blogspot.mydailyjava.guava.cache.overflow;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.io.Files;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,8 @@ import java.io.*;
 import java.nio.channels.FileLock;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, V> {
 
@@ -54,6 +57,22 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
             throw new IllegalArgumentException();
         }
         return persistenceFile;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public Set<K> getPersistedKeys() {
+    	Set<K> toret = new TreeSet<K>();
+    	for (File x : persistenceRootDirectory.listFiles()) {
+    		K key = (K)x.getName();
+    		toret.add(key);
+    	}
+    	return toret;
+    }
+    
+    public Set<K> getKeys() {
+    	Set<K> toret = getPersistedKeys();
+    	toret.addAll(super.asMap().keySet());
+    	return toret;
     }
 
     @Override

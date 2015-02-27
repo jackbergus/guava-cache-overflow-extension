@@ -61,8 +61,8 @@ public class CacheMap<K,V> implements Map<K,V> {
     public boolean containsKey(Object key) {
         try {
             return (c.get((K)key, call)!=null);
-        } catch (ExecutionException ex) {
-            Logger.getLogger(CacheMap.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable ex) {
+            //Logger.getLogger(CacheMap.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -80,8 +80,8 @@ public class CacheMap<K,V> implements Map<K,V> {
     public V get(Object key) {
         try {
             return (c.get((K)key, call));
-        } catch (ExecutionException ex) {
-            Logger.getLogger(CacheMap.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable ex) {
+            //Logger.getLogger(CacheMap.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }

@@ -44,7 +44,7 @@ class RemovalNotifications {
     private <K, V> RemovalNotification<K, V> makeInternal(K key, V value) {
         try {
             try {
-                return (RemovalNotification<K, V>) constructor.newInstance(key, value, RemovalCause.EXPLICIT);
+                return constructor.newInstance(key, value, RemovalCause.EXPLICIT);
             } catch (InvocationTargetException e) {
                 throw new IllegalStateException(String.format("Creating an instance of %s for key %s and value %s caused an exception to be thrown",
                         RemovalNotification.class.getCanonicalName(), key, value), e);

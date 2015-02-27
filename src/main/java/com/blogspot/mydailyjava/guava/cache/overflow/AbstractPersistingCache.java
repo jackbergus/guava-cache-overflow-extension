@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2015 Giacomo Bergami <giacomo@openmailbox.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 package com.blogspot.mydailyjava.guava.cache.overflow;
 
 import com.google.common.cache.*;
@@ -147,6 +164,8 @@ public abstract class AbstractPersistingCache<K, V> implements Cache<K, V> {
     public V get(K key, Callable<? extends V> valueLoader) throws ExecutionException {
         return underlyingCache.get(key, new PersistedStateValueLoader(key, valueLoader));
     }
+    
+    
 
     @Override
     @SuppressWarnings("unchecked")
@@ -224,8 +243,19 @@ public abstract class AbstractPersistingCache<K, V> implements Cache<K, V> {
         return underlyingCache.asMap();
     }
 
+    /**
+     * With this implementation, the cleanUp call stores all the elements in the HDD
+     */
     @Override
     public void cleanUp() {
+    	Map<K,V> m = underlyingCache.asMap();
+    	for (K x : m.keySet()) {
+    		try {
+				this.persistValue(x, m.get(x));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
         underlyingCache.cleanUp();
     }
 }

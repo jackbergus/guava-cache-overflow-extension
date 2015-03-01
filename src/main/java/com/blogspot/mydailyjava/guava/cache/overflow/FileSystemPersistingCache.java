@@ -39,9 +39,20 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     }
 
     private File validateDirectory(File directory) {
+    	//Some issues with the MacOS tmp folder making
+    	directory.delete();
+        directory.mkdir();
         directory.mkdirs();
         if (!directory.exists() || !directory.isDirectory() || !directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(String.format("Directory %s cannot be used as a persistence directory",
+        	if (!directory.exists())
+                System.err.println("Err: dir does not exist");
+            if (!directory.isDirectory())
+                System.err.println("Err: not a directory");
+            if (!directory.canRead())
+                System.err.println("Err: cannot read");
+            if (!directory.canWrite())
+                System.err.println("Err: cannot write");
+        	throw new IllegalArgumentException(String.format("A Directory %s cannot be used as a persistence directory",
                     directory.getAbsolutePath()));
         }
         return directory;

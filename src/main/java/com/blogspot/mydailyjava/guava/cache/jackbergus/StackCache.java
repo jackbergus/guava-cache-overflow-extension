@@ -55,4 +55,9 @@ public class StackCache<T> extends Stack<T>{
             return null;
         return stackMap.get(maxCount).iterator().next();
     }   
+    
+    @Override
+    public String toString() {
+    	return countMap.toString();
+    }
 }

@@ -13,10 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, V> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemPersistingCache.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemPersistingCache.class);
 
     private final File persistenceRootDirectory;
 
@@ -35,7 +36,7 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     protected FileSystemPersistingCache(CacheBuilder<Object, Object> cacheBuilder, File persistenceDirectory, RemovalListener<K, V> removalListener) {
         super(cacheBuilder, removalListener);
         this.persistenceRootDirectory = validateDirectory(persistenceDirectory);
-        LOGGER.info("Persisting to {}", persistenceDirectory.getAbsolutePath());
+        //LOGGER.info("Persisting to {}", persistenceDirectory.getAbsolutePath());
     }
 
     private File validateDirectory(File directory) {
@@ -71,7 +72,7 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     }
     
     @SuppressWarnings("unchecked")
-	public Set<K> getPersistedKeys() {
+	public Set<K> getPersistedKeys(Function<String,K> conv) {
     	Set<K> toret = new TreeSet<K>();
     	for (File x : persistenceRootDirectory.listFiles()) {
     		if (x.isFile()) {
@@ -79,7 +80,7 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
 				if (x.getName().contains("Icon")&&x.getName().endsWith("\r"))
 					continue;
 				System.out.println(x.getName());
-				K key = (K)x.getName();
+				K key = conv.apply(x.getName());
 				toret.add(key);
 	    		
     		}
@@ -87,8 +88,8 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     	return toret;
     }
     
-    public Set<K> getKeys() {
-    	Set<K> toret = getPersistedKeys();
+    public Set<K> getKeys(Function<String,K> conv) {
+    	Set<K> toret = getPersistedKeys(conv);
     	toret.addAll(super.asMap().keySet());
     	return toret;
     }

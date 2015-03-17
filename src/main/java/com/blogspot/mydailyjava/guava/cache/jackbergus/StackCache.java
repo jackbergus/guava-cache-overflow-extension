@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.function.Function;
 
 
 public class StackCache<T> extends Stack<T>{
@@ -11,9 +12,14 @@ public class StackCache<T> extends Stack<T>{
 	 * 
 	 */
 	private static final long serialVersionUID = 3644923435712459806L;
-	private final Map<T, Integer> countMap = CacheBuilder.createTmpCacheBuilder();
-    private final Map<Integer, Set<T>> stackMap = CacheBuilder.createTmpCacheBuilder();
+	private final Map<T, Integer> countMap;
+    private final Map<Integer, Set<T>> stackMap = CacheBuilder.createTmpCacheBuilder(s -> Integer.parseInt(s));
     private int maxCount = 0;
+    
+    public StackCache(Function<String,T> conv) {
+    	super();
+    	countMap = CacheBuilder.createTmpCacheBuilder(conv);
+    }
     
     @Override
     public T push(T o) {

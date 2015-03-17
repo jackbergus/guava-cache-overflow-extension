@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,10 +45,12 @@ public class CacheMap<K,V> implements Map<K,V> {
     
     private FileSystemPersistingCache<K,V> c;
     private final Callable<? extends V> call;
+    private Function<String,K> cast;
     
-    public CacheMap(FileSystemPersistingCache<K,V> c) {
+    public CacheMap(FileSystemPersistingCache<K,V> c, Function<String,K> conv) {
         this.call = () -> null;
         this.c = c;
+        this.cast = conv;
     }
 
     @Override
@@ -115,7 +118,7 @@ public class CacheMap<K,V> implements Map<K,V> {
 
     @Override
     public Set<K> keySet() {
-        return c.getKeys();
+        return c.getKeys(cast);
     }
 
     @Override 
@@ -166,8 +169,8 @@ public class CacheMap<K,V> implements Map<K,V> {
 
 					@Override
 					public java.util.Map.Entry<K, V> next() {
-						K k = keyIterator.next();
-						V v = self.get(k);
+						final K k = keyIterator.next();
+						final V v = self.get(k);
 						return new java.util.Map.Entry<K, V>(){
 							private K key = k;
 							private V value = v;

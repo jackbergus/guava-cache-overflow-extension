@@ -79,7 +79,7 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     			//Shitty Mac
 				if (x.getName().contains("Icon")&&x.getName().endsWith("\r"))
 					continue;
-				System.out.println(x.getName());
+				//System.out.println(x.getName());
 				K key = conv.apply(x.getName());
 				toret.add(key);
 	    		

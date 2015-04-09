@@ -116,12 +116,16 @@ public class CacheMap<K,V> implements Map<K,V> {
         c.invalidateAll();
     }
 
-    @Override
+    @Override @Deprecated
     public Set<K> keySet() {
         return c.getKeys(cast);
     }
+    
+    public Iterator<K> getKeyIterator() {
+    	return c.getKeyIterator(cast);
+    }
 
-    @Override 
+    @Override @Deprecated
     public Collection<V> values() {
     	List<V> values = new LinkedList<V>();
         for (K k : keySet()) {
@@ -129,11 +133,50 @@ public class CacheMap<K,V> implements Map<K,V> {
         }
         return values;
     }
+    
 
-    @Override 
+    @Override @Deprecated
     public Set<Entry<K, V>> entrySet() {
     	final CacheMap<K,V> self = this;
         return new MapSetView(this);
+    }
+    
+    public Iterator<Entry<K,V>> getMapIterator() {
+    	return new Iterator<Entry<K,V>>() {
+    		private  Iterator<K> kit = getKeyIterator();
+    		 @Override
+    		    public boolean hasNext() {
+    			 return kit.hasNext();
+    		 }
+
+    		    @Override
+    		    public Entry<K,V> next() {
+    		        	K key = kit.next();
+    		        	V val = get(key);
+    		        	return new Entry<K,V>() {
+
+    		        		private V tmp = val;
+							@Override
+							public K getKey() {
+								return key;
+							}
+
+							@Override
+							public V getValue() {
+								return tmp;
+							}
+
+							@Override
+							public V setValue(V value) {
+								V toret = tmp;
+								tmp = value;
+								put(key,value);
+								return toret;
+							}
+    		        		
+    		        	};
+    		    }
+    	};
     }
     
     /**

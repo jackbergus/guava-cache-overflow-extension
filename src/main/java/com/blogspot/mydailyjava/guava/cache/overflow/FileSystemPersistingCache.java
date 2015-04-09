@@ -1,7 +1,9 @@
 package com.blogspot.mydailyjava.guava.cache.overflow;
 
+import com.blogspot.mydailyjava.guava.cache.jackbergus.PersistedKeyIterator;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
+import com.google.common.collect.Iterators;
 import com.google.common.io.Files;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.channels.FileLock;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -92,6 +95,10 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     	Set<K> toret = getPersistedKeys(conv);
     	toret.addAll(super.asMap().keySet());
     	return toret;
+    }
+    
+    public Iterator<K> getKeyIterator(Function<String,K> conv) {
+    	return Iterators.concat(new PersistedKeyIterator(persistenceRootDirectory,conv),super.asMap().keySet().iterator());
     }
 
     @Override

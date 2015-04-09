@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.blogspot.mydailyjava</groupId>
+  <artifactId>guava-cache-overflow-extension</artifactId>
+  <version>0.3-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20150409183805</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.3-SNAPSHOT</value>
+        <updated>20150409183805</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.3-SNAPSHOT</value>
+        <updated>20150409183805</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

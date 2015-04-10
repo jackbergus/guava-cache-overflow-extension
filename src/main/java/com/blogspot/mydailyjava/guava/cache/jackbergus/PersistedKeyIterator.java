@@ -42,6 +42,7 @@ public class PersistedKeyIterator<K> implements Iterator<K> {
 		if (hasNext()) {
 			File x = it[pos];
 			K key = fun.apply(x.getName());
+			pos++;
 			return key;
 		}
 		return null;

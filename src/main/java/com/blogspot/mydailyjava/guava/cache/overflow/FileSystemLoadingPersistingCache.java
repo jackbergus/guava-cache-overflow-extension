@@ -56,11 +56,7 @@ public class FileSystemLoadingPersistingCache<K, V> extends FileSystemPersisting
 
     @Override
     public V getUnchecked(K key) {
-        try {
-            return get(key, new ValueLoaderFromCacheLoader(cacheLoader, key));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e.getCause());
-        }
+        return get(key, new ValueLoaderFromCacheLoader(cacheLoader, key));
     }
 
     @Override

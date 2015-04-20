@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, V> {
@@ -80,7 +82,7 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
     	for (File x : persistenceRootDirectory.listFiles()) {
     		if (x.isFile()) {
     			//Shitty Mac
-				if (x.getName().contains("Icon")&&x.getName().endsWith("\r"))
+				if (x.getName().contains("Icon")||(x.getName().contains(".DS_Store"))||x.getName().startsWith("."))
 					continue;
 				//System.out.println(x.getName());
 				K key = conv.apply(x.getName());
@@ -119,6 +121,21 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
             throw new RuntimeException(e);
         } finally {
             fileInputStream.close();
+        }
+    }
+    
+    @Override
+    public V get(K key, Callable<? extends V> valueLoader)  {
+        try {
+            return super.get(key, valueLoader);
+        } catch(Throwable ex1) {
+            try {
+                return findPersisted(key);
+            } catch (Throwable ex2) {
+                ex1.printStackTrace();
+                ex2.printStackTrace();
+                return null;
+            }
         }
     }
 
@@ -187,6 +204,11 @@ public class FileSystemPersistingCache<K, V> extends AbstractPersistingCache<K, 
 
     private int countFilesInFolders(File directory) {
         int size = 0;
+        if (directory==null)
+        {
+        	System.err.println("ERROR: directory passed is null");
+        	return 0;
+        }
         for (File file : directory.listFiles()) {
             if (file.isDirectory()) {
                 size += countFilesInFolders(file);
